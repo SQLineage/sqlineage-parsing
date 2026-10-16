@@ -1,0 +1,40 @@
+name: Full parser mutation
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 7 * * 1'
+permissions:
+  contents: read
+jobs:
+  mutation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        engine: [SqlServer, Oracle]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: SQLineage/sql-grammar-plsql
+          ref: e92154a458bad34eced2134396deff19e4da25e5
+          path: artifacts/dependencies/grammar
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Build packages and test independent consumers
+        shell: pwsh
+        run: ./scripts/Validate.ps1 -GrammarPath ./artifacts/dependencies/grammar
+      - name: Retain original full-project informational break=0
+        shell: pwsh
+        env:
+          ENGINE: ${{ matrix.engine }}
+        run: ./scripts/Run-MutationTests.ps1 -Project $env:ENGINE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parser-mutation-${{ matrix.engine }}
+          path: TestResults/mutation/
+          if-no-files-found: error

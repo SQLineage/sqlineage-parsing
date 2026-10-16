@@ -1,0 +1,3 @@
+
+# C# style gate uses LF across checkouts.
+*.cs text eol=lf

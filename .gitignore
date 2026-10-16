@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+artifacts/
+
+# Scanner working data can contain server settings.
+.sonarqube/
+.scannerwork/
+
+[Tt]est[Rr]esults/
+.stryker-tmp/
+StrykerOutput/

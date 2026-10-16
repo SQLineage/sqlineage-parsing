@@ -1,0 +1,90 @@
+name: Workflow and dependency quality
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  workflow-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Sonar configuration guards offline
+        shell: pwsh
+        run: ./scripts/Test-SonarConfiguration.ps1
+      - run: >-
+          docker run --rm --volume "$PWD/.github:/repo/.github:ro" --workdir /repo
+          rhysd/actionlint:1.7.7@sha256:887a259a5a534f3c4f36cb02dca341673c6089431057242cdc931e9f133147e9
+          .github/workflows/*.yml
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: low
+          comment-summary-in-pr: never
+  quality-gate:
+    if: always()
+    needs: [workflow-lint, dependency-review, style, coverage]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35
+        with:
+          jobs: ${{ toJSON(needs) }}
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: SQLineage/sql-grammar-plsql
+          ref: e92154a458bad34eced2134396deff19e4da25e5
+          path: artifacts/dependencies/grammar
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Build packages and test independent consumers
+        shell: pwsh
+        run: ./scripts/Validate.ps1 -GrammarPath ./artifacts/dependencies/grammar
+      - run: dotnet format analyzers SQLineage.Parsing.slnx --verify-no-changes --no-restore
+      - run: dotnet format SQLineage.Parsing.slnx --verify-no-changes --no-restore
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: SQLineage/sql-grammar-plsql
+          ref: e92154a458bad34eced2134396deff19e4da25e5
+          path: artifacts/dependencies/grammar
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Build packages and test independent consumers
+        shell: pwsh
+        run: ./scripts/Validate.ps1 -GrammarPath ./artifacts/dependencies/grammar
+      - name: Verify coverage gate failure handling
+        shell: pwsh
+        run: ./scripts/Test-CliCoverageGate.ps1
+      - name: Instrument source while retaining separate NuGet consumer validation
+        run: dotnet test SQLineage.Parsing.slnx -c Release -p:CoverageBuild=true --collect "XPlat Code Coverage" --settings tests/coverage.runsettings --results-directory TestResults/quality --logger trx
+      - name: Enforce original coverage thresholds
+        if: ${{ !cancelled() }}
+        uses: danielpalme/ReportGenerator-GitHub-Action@049f7ec958c672fd31d5cc1cb01622dc8d2e23ab
+        with:
+          reports: 'TestResults/quality/**/coverage.cobertura.xml'
+          targetdir: TestResults/quality/report
+          reporttypes: 'Html;Cobertura;MarkdownSummaryGithub;JsonSummary'
+          license: ${{ secrets.REPORTGENERATOR_LICENSE }}
+          customSettings: 'minimumCoverageThresholds:lineCoverage=100;minimumCoverageThresholds:branchCoverage=100;minimumCoverageThresholds:methodCoverage=100;minimumCoverageThresholds:fullMethodCoverage=100'
+      - name: Require unrounded counts including PRO method metrics
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: ./scripts/Assert-CliCoverage.ps1 -SummaryPath TestResults/quality/report/Summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parser-coverage
+          path: TestResults/quality/
+          if-no-files-found: error

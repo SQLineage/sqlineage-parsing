@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>SQLineage.Parsing.Oracle</PackageId>
+    <Description>Local preparation of an Oracle SQL/PLSQL parsing facade with bounded prediction-cache retention.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SQLineage.Grammar.PlSql" Version="0.0.0-local.1" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+  </ItemGroup>
+</Project>

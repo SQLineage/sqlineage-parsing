@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>SQLineage.Parsing.SqlServer</PackageId>
+    <Description>Local preparation of a SQL Server parsing facade over ScriptDom.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="180.102.0" />
+  </ItemGroup>
+</Project>

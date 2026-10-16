@@ -1,0 +1,13 @@
+{
+  "approved": false,
+  "service": "",
+  "hostUrl": "",
+  "organization": "",
+  "projectKey": "",
+  "qualityGateName": "",
+  "scannerVersion": "",
+  "pullRequestAnalysisSupported": false,
+  "solution": "SQLineage.Parsing.slnx",
+  "coverageSettings": "tests/coverage.runsettings",
+  "sourceCoverageBuild": true
+}

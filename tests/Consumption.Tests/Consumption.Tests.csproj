@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SQLineage.Parsing.SqlServer" Version="0.0.0-local.1" Condition="'$(CoverageBuild)' != 'true'" />
+    <PackageReference Include="SQLineage.Parsing.Oracle" Version="0.0.0-local.1" Condition="'$(CoverageBuild)' != 'true'" />
+    <ProjectReference Include="../../src/SQLineage.Parsing.SqlServer/SQLineage.Parsing.SqlServer.csproj" Condition="'$(CoverageBuild)' == 'true'" />
+    <ProjectReference Include="../../src/SQLineage.Parsing.Oracle/SQLineage.Parsing.Oracle.csproj" Condition="'$(CoverageBuild)' == 'true'" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" PrivateAssets="all" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>
