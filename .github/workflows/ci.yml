@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: SQLineage/sql-grammar-plsql
-          ref: 81bf4af42960ae74dd74182f32fdd3f8f132bcc8
+          ref: 3a140428a96402e71e038bfbe436ec1024e83e2e
           path: artifacts/dependencies/grammar
       - uses: actions/setup-dotnet@v4
         with:

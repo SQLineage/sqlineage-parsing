@@ -5,8 +5,9 @@ Independently consumable .NET 10 parsing facades: `SQLineage.Parsing.SqlServer` 
 Product lineage visitors, Core, extraction and metadata resolution remain in the private product.
 
 This migration is under review. Version `0.0.0-local.1` is built into a local feed; no package,
-release or automatic publication is configured. Original-code licensing remains pending; public
-visibility does not grant a redistribution license. See [provenance](PROVENANCE.md).
+release or automatic publication is configured. This repository is licensed under
+[Apache License 2.0](LICENSE). See [NOTICE](NOTICE) and [provenance](PROVENANCE.md) for attribution.
+Dependencies retain their own licenses. Packages include LICENSE/NOTICE and declare `Apache-2.0`.
 
 Clone [the grammar repository](https://github.com/SQLineage/sql-grammar-plsql) alongside this one
 and check out its migration PR branch while review is pending. Validate with:

@@ -1,0 +1,17 @@
+SQLineage parsing
+
+This repository contains parsing code adapted from:
+https://github.com/cangelosilima/SyncSQL
+Source revision: bbfb21916c8c9078ef7c4b947f07bd154b112249
+
+Adapted source includes TSqlParserFactory, the SQL Server legacy grammar fallback,
+and the Oracle analyzer's exclusive prediction-cache leasing, limits and simulator setup.
+The migration introduces standalone parser facades, structured diagnostics and scoped sessions.
+Original source copyright notices, where present, are preserved. See PROVENANCE.md.
+
+The Oracle grammar is supplied by SQLineage.Grammar.PlSql, derived from antlr/grammars-v4's
+sql/plsql grammar. Its package retains its Apache-2.0 license, upstream attribution and NOTICE,
+including the documented local EDITIONABLE/NONEDITIONABLE synonym syntax changes.
+ScriptDom, the ANTLR runtime and other third-party dependencies retain their own licenses.
+
+This repository's Apache-2.0 selection does not change the private SQLineage product's license.
