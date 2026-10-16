@@ -1,4 +1,4 @@
-using Microsoft.SqlServer.TransactSql.ScriptDom;
+﻿using Microsoft.SqlServer.TransactSql.ScriptDom;
 
 namespace SQLineage.Parsing.SqlServer;
 

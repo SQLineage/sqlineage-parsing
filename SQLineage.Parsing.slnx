@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/SQLineage.Parsing.SqlServer/SQLineage.Parsing.SqlServer.csproj" />
+  <Project Path="src/SQLineage.Parsing.Oracle/SQLineage.Parsing.Oracle.csproj" />
+  <Project Path="tests/Consumption.Tests/Consumption.Tests.csproj" />
+</Solution>

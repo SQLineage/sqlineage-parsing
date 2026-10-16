@@ -1,8 +1,17 @@
-using Microsoft.SqlServer.TransactSql.ScriptDom;
+﻿using Microsoft.SqlServer.TransactSql.ScriptDom;
 using SQLineage.Parsing.SqlServer;
+
+namespace SQLineage.Parsing.Consumption.Tests;
 
 public sealed class SqlServerConsumptionTests
 {
+    [Fact]
+    public void MissingGrammarProducesAnActionableFailure()
+    {
+        var error = Assert.Throws<InvalidOperationException>(() => TSqlParserFactory.CreateParser([typeof(string)]));
+        Assert.Contains("TSqlNNNParser", error.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void NewestGrammarHandlesModernSyntax()
     {

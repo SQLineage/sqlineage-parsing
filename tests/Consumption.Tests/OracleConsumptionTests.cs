@@ -1,12 +1,36 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Dfa;
 using SQLineage.Parsing.Oracle;
 
+namespace SQLineage.Parsing.Consumption.Tests;
+
 public sealed class OracleConsumptionTests
 {
+    [Fact]
+    public void EmptySessionCanBeReusedByTheNextParse()
+    {
+        OracleSqlParser parser = new();
+        Assert.Equal(42, parser.WithSession(_ => 42));
+        Assert.Equal(0, parser.Parse("SELECT 1 FROM dual;", result => result.Diagnostics.Count));
+    }
+
+    [Fact]
+    public void SessionInvokesTheSuppliedParseStrategy()
+    {
+        bool invoked = false;
+        int errors = new OracleSqlParser().WithSession(session => session.Parse("SELECT 1 FROM dual;",
+            result => result.Diagnostics.Count, parser =>
+            {
+                invoked = true;
+                return parser.sql_script();
+            }));
+        Assert.True(invoked);
+        Assert.Equal(0, errors);
+    }
+
     [Fact]
     public void DiagnosticsCollectLexerAndParserErrorsThroughThePublicFacade()
     {
