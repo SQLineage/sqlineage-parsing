@@ -7,6 +7,22 @@ using SQLineage.Parsing.Oracle;
 
 public sealed class OracleConsumptionTests
 {
+    [Fact]
+    public void DiagnosticsCollectLexerAndParserErrorsThroughThePublicFacade()
+    {
+        new OracleSqlParser().Parse("SELECT \u0000 FROM;", result =>
+        {
+            Assert.Contains(result.Diagnostics, diagnostic => diagnostic.IsLexerError);
+            Assert.Contains(result.Diagnostics, diagnostic => !diagnostic.IsLexerError);
+            Assert.All(result.Diagnostics, diagnostic =>
+            {
+                Assert.True(diagnostic.Line > 0);
+                Assert.True(diagnostic.Column > 0);
+            });
+            return 0;
+        });
+    }
+
     [Theory]
     [InlineData("CREATE OR REPLACE EDITIONABLE SYNONYM reporting.current_orders FOR app.orders;")]
     [InlineData("CREATE NONEDITIONABLE PUBLIC SYNONYM current_orders FOR app.orders@sales.world;")]

@@ -24,6 +24,7 @@ CI pins the exact grammar commit and requires no private-repository credentials.
 `SqlServerParser.Parse(sql)` returns the newest ScriptDom AST and diagnostics.
 Set `allowLegacySyntax: true` to accept TSql80 only if the whole input parses cleanly; a failed retry
 preserves the newest partial AST and diagnostics. Leave false for existing lint semantics.
+This retry supports older SQL Server syntax; it is SQL language support, not a SyncSQL API alias.
 `TSqlParserFactory` selects the highest available version and supports explicit parser creation.
 
 ## Oracle

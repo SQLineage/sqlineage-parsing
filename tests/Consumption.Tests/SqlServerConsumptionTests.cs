@@ -50,7 +50,9 @@ public sealed class SqlServerConsumptionTests
         foreach (var assembly in new[] { typeof(SqlServerParser).Assembly, typeof(SQLineage.Parsing.Oracle.OracleSqlParser).Assembly })
         {
             Assert.DoesNotContain(assembly.GetReferencedAssemblies(), name =>
-                name.Name!.Contains("Core", StringComparison.Ordinal) && name.Name.StartsWith("SyncSql", StringComparison.Ordinal));
+                name.Name!.StartsWith("SQLineage.", StringComparison.Ordinal)
+                && !name.Name.StartsWith("SQLineage.Parsing.", StringComparison.Ordinal)
+                && !name.Name.StartsWith("SQLineage.Grammar.", StringComparison.Ordinal));
             Assert.DoesNotContain(assembly.GetTypes(), type => type.Name.Contains("LineageAnalyzer", StringComparison.Ordinal));
         }
     }
